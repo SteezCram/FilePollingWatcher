@@ -54,7 +54,7 @@ namespace FilePollingWatcher
         public Regex[] Filters { get; init; }
 
         /// <summary>
-        /// Invert the filters regex or not.
+        /// Invert the filters regex or not. By default, the filters act as a whitelist. Turn this option to true for the filters to act as a blacklist.
         /// </summary>
         public bool FiltersInverted { get; init; }
 
@@ -94,9 +94,9 @@ namespace FilePollingWatcher
             _cts = new CancellationTokenSource();
             _initTriggerEvent = initTriggerEvent;
 
-            FilePollingWatcherEvent = FilePollingWatcherEvent == FilePollingWatcherEvent.None ? FilePollingWatcherEvent.All : FilePollingWatcherEvent;
+            FilePollingWatcherEvent = FilePollingWatcherEvent is FilePollingWatcherEvent.None ? FilePollingWatcherEvent.All : FilePollingWatcherEvent;
             Filters = Filters is null ? Array.Empty<Regex>() : Filters;
-            PollingTime = PollingTime == 0 ? 10000 : PollingTime;
+            PollingTime = PollingTime is 0 ? 10000 : PollingTime;
         }
 
 
