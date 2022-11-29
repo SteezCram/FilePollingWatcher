@@ -13,6 +13,8 @@
     <RepositoryUrl>https://github.com/SteezCram/FilePollingWatcher</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>Steez</Authors>
+    <PackageTags>io;polling;watcher;file</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

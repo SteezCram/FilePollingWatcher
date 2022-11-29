@@ -110,11 +110,23 @@ namespace FilePollingWatcher
         /// </summary>
         public void Start()
         {
-            if (_worker is not null)
-                return;
+            if (_worker is not null) return;
 
             _worker = new Thread(() => Work(_cts.Token));
             _worker.Start();
+        }
+
+        /// <summary>
+        /// Start the file watcher.
+        /// </summary>
+        /// 
+        /// <returns>Task to stop and or manage.</returns>
+        public Task StartAsync()
+        {
+            Task task = new(() => Work(_cts.Token));
+            task.Start();
+
+            return task;
         }
 
         /// <summary>
@@ -122,8 +134,7 @@ namespace FilePollingWatcher
         /// </summary>
         public void Stop()
         {
-            if (_worker is null)
-                return;
+            if (_worker is null) return;
 
             _cts.Cancel();
             _worker.Join();
@@ -135,7 +146,7 @@ namespace FilePollingWatcher
         /// </summary>
         /// 
         /// <param name="token">Cancellation token to stop the worker</param>
-        private void Work(CancellationToken token)
+        private async void Work(CancellationToken token)
         {
             Dictionary<string, FilePollingInfo> cache = _Init();
 
@@ -148,7 +159,7 @@ namespace FilePollingWatcher
                 });
 
                 Callback?.Invoke(events);
-                CallbackAsync?.Invoke(events).Wait(CancellationToken.None);
+                await CallbackAsync?.Invoke(events);
             }
 
             while (true)
@@ -172,7 +183,7 @@ namespace FilePollingWatcher
 
 
                 Callback?.Invoke(events);
-                CallbackAsync?.Invoke(events).Wait(CancellationToken.None);
+                await CallbackAsync?.Invoke(events);
 
                 // Force memory GC
                 events.Clear();
